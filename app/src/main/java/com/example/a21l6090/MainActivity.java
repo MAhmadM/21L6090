@@ -3,30 +3,25 @@ package com.example.a21l6090;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.activity.EdgeToEdge;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        new Handler().postDelayed(()->{
-            Intent intent = new Intent(MainActivity.this,Login.class);
 
-            startActivity(intent);
+        ImageFilterView logo = findViewById(R.id.splash_logo);
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        logo.startAnimation(fadeIn);
+
+        new Handler().postDelayed(() -> {
+            startActivity(new Intent(MainActivity.this, Login.class));
             finish();
-        },2000);
+        }, 2000);
     }
 }

@@ -2,16 +2,15 @@ package com.example.a21l6090;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class QuizActivity extends AppCompatActivity {
-    String name;
+    private String name;
 
     private TextView questionNumberTextView, questionTextView;
     private RadioGroup optionsGroup;
@@ -55,8 +54,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        Intent in = getIntent();
-        name=in.getStringExtra("name");
+        // Initialize views
         questionNumberTextView = findViewById(R.id.question_number);
         questionTextView = findViewById(R.id.question_text);
         optionsGroup = findViewById(R.id.option_group);
@@ -67,80 +65,94 @@ public class QuizActivity extends AppCompatActivity {
         previousButton = findViewById(R.id.previous_button);
         nextButton = findViewById(R.id.next_button);
 
-        for (int i = 0; i < selectedAnswers.length; i++) {
+        // Get user name from intent
+        name = getIntent().getStringExtra("nname");
+
+        // Initialize question tracking
+        initializeQuestionState();
+        loadQuestion();
+        updateNavigationButtons();
+
+        // Button listeners
+        nextButton.setOnClickListener(v -> handleNextQuestion());
+        previousButton.setOnClickListener(v -> handlePreviousQuestion());
+    }
+
+    private void initializeQuestionState() {
+        selectedAnswers = new int[questions.length];
+        for(int i=0; i<selectedAnswers.length; i++) {
             selectedAnswers[i] = -1;
         }
-
-        loadQuestion();
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveSelectedAnswer();
-                if(currentQuestionIndex==9){
-                    nextButton.setText("Finish");
-                }
-
-                if (currentQuestionIndex < questions.length - 1) {
-                    currentQuestionIndex++;
-                    loadQuestion();
-                }
-
-                else {
-                    calculateScore();
-                    Intent intent = new Intent(QuizActivity.this,ResultScreen.class);
-                    intent.putExtra("name", name);
-                    intent.putExtra("score",score);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(QuizActivity.this, "Quiz Completed! Your score: " + name +score + "/" + questions.length, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveSelectedAnswer();
-                if(currentQuestionIndex!=9)
-                {
-                    nextButton.setText("Next");
-                }
-                if (currentQuestionIndex > 0) {
-                    currentQuestionIndex--;
-                    loadQuestion();
-                }
-            }
-        });
     }
 
     private void loadQuestion() {
-        questionNumberTextView.setText((currentQuestionIndex + 1) + "/" + questions.length);
+        // Set question number and text
+        questionNumberTextView.setText(String.format("Question %d/%d",
+                currentQuestionIndex+1, questions.length));
         questionTextView.setText(questions[currentQuestionIndex]);
+
+        // Set options
         option1.setText(options[currentQuestionIndex][0]);
         option2.setText(options[currentQuestionIndex][1]);
         option3.setText(options[currentQuestionIndex][2]);
         option4.setText(options[currentQuestionIndex][3]);
-        optionsGroup.clearCheck();
 
-        if (selectedAnswers[currentQuestionIndex] != -1) {
+        // Restore selected answer
+        optionsGroup.clearCheck();
+        if(selectedAnswers[currentQuestionIndex] != -1) {
             ((RadioButton) optionsGroup.getChildAt(selectedAnswers[currentQuestionIndex])).setChecked(true);
         }
     }
 
+    private void handleNextQuestion() {
+        saveSelectedAnswer();
+
+        if(currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        } else {
+            finishQuiz();
+        }
+        updateNavigationButtons();
+    }
+
+    private void handlePreviousQuestion() {
+        saveSelectedAnswer();
+        currentQuestionIndex--;
+        loadQuestion();
+        updateNavigationButtons();
+    }
+
     private void saveSelectedAnswer() {
         int selectedId = optionsGroup.getCheckedRadioButtonId();
-        if (selectedId == -1) return;
+        if(selectedId != -1) {
+            int selectedIndex = optionsGroup.indexOfChild(findViewById(selectedId));
+            selectedAnswers[currentQuestionIndex] = selectedIndex;
+        }
+    }
 
-        View selectedRadioButton = findViewById(selectedId);
-        int selectedIndex = optionsGroup.indexOfChild(selectedRadioButton);
-        selectedAnswers[currentQuestionIndex] = selectedIndex;
+    private void updateNavigationButtons() {
+        // Previous button state
+        previousButton.setEnabled(currentQuestionIndex > 0);
+
+        // Next button text
+        nextButton.setText(currentQuestionIndex == questions.length - 1 ? "Finish" : "Next");
+    }
+
+    private void finishQuiz() {
+        calculateScore();
+        Intent intent = new Intent(this, ResultScreen.class);
+        intent.putExtra("name", name);
+        intent.putExtra("score", score);
+        intent.putExtra("total", questions.length);
+        startActivity(intent);
+        finish();
     }
 
     private void calculateScore() {
         score = 0;
-        for (int i = 0; i < questions.length; i++) {
-            if (selectedAnswers[i] == correctAnswers[i]) {
+        for(int i=0; i<questions.length; i++) {
+            if(selectedAnswers[i] == correctAnswers[i]) {
                 score++;
             }
         }
