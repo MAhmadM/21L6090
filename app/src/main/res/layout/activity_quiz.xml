@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:id="@+id/question_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question 1/10"
+        android:textSize="16sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/question_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Question Text Here"
+        android:textSize="18sp"
+        android:layout_below="@id/question_number"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
+    <RadioGroup
+        android:id="@+id/option_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question_text"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/option_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Option 1" />
+
+        <RadioButton
+            android:id="@+id/option_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Option 2" />
+
+        <RadioButton
+            android:id="@+id/option_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Option 3" />
+
+        <RadioButton
+            android:id="@+id/option_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Option 4" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/previous_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Previous"
+        android:layout_below="@id/option_group"
+        android:layout_marginTop="32dp"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:backgroundTint="#004D40"
+        android:textColor="#FFFFFF"
+        android:layout_below="@id/option_group"
+        android:layout_marginTop="32dp"
+        android:layout_alignParentEnd="true" />
+
+    <!-- Result Screen Layout -->
+    <RelativeLayout
+        android:id="@+id/result_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#F5F5F5">
+
+        <TextView
+            android:id="@+id/result_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scoreboard"
+            android:textSize="20sp"
+            android:textColor="#004D40"
+            android:layout_marginTop="32dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/result_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jhon Doe"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_below="@id/result_title"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/result_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6/10"
+            android:textSize="22sp"
+            android:layout_below="@id/result_name"
+            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/share_score_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share your score"
+            android:backgroundTint="#004D40"
+            android:textColor="#FFFFFF"
+            android:layout_below="@id/result_score"
+            android:layout_marginTop="32dp"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>
